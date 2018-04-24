@@ -1,0 +1,6 @@
+<resources>
+    <string name="f_library_audio_loading_and_wait">数据正在加载，请耐心等待...</string>
+    <string name="f_library_audio_activity_audio_title">音频</string>
+    <string name="f_library_audio_loading">正在载入...</string>
+    <string name="f_library_audio_connect_internel_fail">未能连接至服务器，请检查网络！</string>
+</resources>
