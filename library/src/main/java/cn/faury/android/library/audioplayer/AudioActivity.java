@@ -29,14 +29,12 @@ import android.widget.SlidingDrawer.OnDrawerOpenListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
-import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import java.io.File;
 import java.io.IOException;
+
+import cn.faury.android.library.image.loader.FImageLoader;
 
 public class AudioActivity extends Activity implements OnClickListener,
         OnSeekBarChangeListener, OnDrawerCloseListener, OnDrawerOpenListener,
@@ -216,12 +214,12 @@ public class AudioActivity extends Activity implements OnClickListener,
             LinearLayout.LayoutParams lpSubPic = (LinearLayout.LayoutParams) ivSubImage
                     .getLayoutParams();
             lpSubPic.height = subImage_height;
-            ImageLoader.getInstance().displayImage(audioZmImg,
+            imageLoader.displayImage(audioZmImg,
                     ivSubImage);
         }
 
         if (audioCoverImg != null && !audioCoverImg.equals("")) {
-            ImageLoader.getInstance().displayImage(audioCoverImg,
+            imageLoader.displayImage(audioCoverImg,
                     civLightDisk);
         }
         handler.post(this);
@@ -229,33 +227,7 @@ public class AudioActivity extends Activity implements OnClickListener,
     }
 
     public void setImageLoad() {
-
-        File file = new File(this.getExternalCacheDir(), ".cn.faury.android/library/audioplayer/image");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        ImageLoaderConfiguration config2 = null;
-        try {
-            config2 = new ImageLoaderConfiguration.Builder(this)
-                    .threadPoolSize(3)
-                    .memoryCache(new MyLruMemoryCache(2 * 1024 * 1024))
-                    .memoryCacheSizePercentage(13)
-                    .diskCache(new LruDiskCache(file, new HashCodeFileNameGenerator() // 磁盘缓存
-                    {
-                        @Override
-                        public String generate(String imageUri) {
-                            String[] string = imageUri.split("\\?");
-                            imageUri = string.length > 0 ? string[0] : imageUri;
-                            return super.generate(imageUri);
-                        }
-                    }, 50 * 1024 * 1024))
-                    .diskCacheFileCount(100).writeDebugLogs()
-                    .build();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        imageLoader = ImageLoader.getInstance();
-        imageLoader.init(config2);
+        imageLoader = FImageLoader.createInstance(this);
         options = new DisplayImageOptions.Builder().cacheInMemory(true)
                 .cacheOnDisk(true)
                 .build();
